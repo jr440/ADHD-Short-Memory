@@ -5,6 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vote for Your Favorite Project Names</title>
   <style>
+      [data-theme="cyberpunk"] {
+          --bg-primary: linear-gradient(270deg, #ff00c8, #f7ff00, #6fff00, #00d7ff, #ff00c8);
+          --bg-secondary: rgba(15, 0, 25, 0.9);
+          --bg-tertiary: #1d002c;
+          --bg-card: rgba(15, 0, 25, 0.9);
+          --text-primary: #6fff00;
+          --text-secondary: #ff00f7;
+          --text-muted: #00d7ff;
+          --border-color: rgba(102, 255, 0, 0.6);
+          --accent-color: #ff00c8;
+          --accent-secondary: #f7ff00;
+          --success-bg: rgba(0, 64, 0, 0.9);
+          --success-border: #00ff88;
+          --success-text: #00ff9d;
+          --error-bg: rgba(64, 0, 0, 0.9);
+          --error-border: #ff0055;
+          --error-text: #ff0066;
+          --danger-bg: rgba(64, 0, 0, 0.9);
+          --danger-text: #ff0066;
+          --danger-border: #ff0055;
+          --shadow-sm: 0 0 4px var(--accent-color), 0 0 8px var(--accent-secondary);
+          --shadow-md: 0 0 10px rgba(255, 0, 200, 0.5), 0 0 15px rgba(102, 255, 0, 0.4);
+          --shadow-lg: 0 0 15px rgba(255, 0, 200, 0.6), 0 0 25px rgba(247, 255, 0, 0.4), inset 0 0 10px rgba(102, 255, 0, 0.5);
+          --neon-glow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--accent-color), 0 0 20px var(--accent-color), 0 0 25px var(--accent-color), 0 0 30px var(--accent-color), 0 0 35px var(--accent-color);
+      }
+
+      [data-theme="cyberpunk"] body {
+          background-size: 400% 400%;
+          animation: acid-trip-bg 15s ease infinite;
+      }
+
+      @keyframes acid-trip-bg {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+      }
+
       * {
           margin: 0;
           padding: 0;
@@ -12,32 +49,35 @@
       }
 
       body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          background: var(--bg-primary);
           min-height: 100vh;
-          padding: 20px;
+          color: var(--text-primary);
+          line-height: 1.6;
+          transition: all 0.3s ease;
       }
 
       .container {
           max-width: 800px;
           margin: 0 auto;
-          background: white;
+          background: var(--bg-card);
           border-radius: 15px;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+          box-shadow: var(--shadow-md);
           overflow: hidden;
       }
 
       .header {
-          background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-          color: white;
+          background: var(--bg-secondary);
+          color: var(--text-primary);
           padding: 30px;
           text-align: center;
+          box-shadow: var(--shadow-lg);
       }
 
       .header h1 {
           font-size: 2.5em;
           margin-bottom: 10px;
-          text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+          text-shadow: var(--neon-glow);
       }
 
       .header p {
@@ -50,39 +90,42 @@
       }
 
       .instructions {
-          background: #f8f9fa;
+          background: var(--bg-tertiary);
           padding: 20px;
           border-radius: 10px;
           margin-bottom: 30px;
-          border-left: 5px solid #4facfe;
+          border-left: 5px solid var(--accent-color);
+          box-shadow: var(--shadow-sm);
       }
 
       .instructions h3 {
-          color: #333;
+          color: var(--text-secondary);
           margin-bottom: 10px;
       }
 
       .name-option {
-          background: #fff;
-          border: 2px solid #e9ecef;
+          background: var(--bg-card);
+          border: 2px solid var(--border-color);
           border-radius: 10px;
           padding: 20px;
           margin-bottom: 15px;
           cursor: pointer;
           transition: all 0.3s ease;
           position: relative;
+          box-shadow: var(--shadow-sm);
       }
 
       .name-option:hover {
-          border-color: #4facfe;
+          border-color: var(--accent-color);
           transform: translateY(-2px);
-          box-shadow: 0 5px 15px rgba(79, 172, 254, 0.2);
+          box-shadow: var(--shadow-md);
       }
 
       .name-option.selected {
-          border-color: #4facfe;
-          background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-          color: white;
+          border-color: var(--accent-color);
+          background: var(--accent-color);
+          color: var(--text-secondary);
+          box-shadow: var(--shadow-lg);
       }
 
       .name-option.disabled {
@@ -105,39 +148,40 @@
           position: absolute;
           top: 15px;
           right: 20px;
-          background: rgba(0,0,0,0.1);
+          background: var(--bg-secondary);
           padding: 5px 12px;
           border-radius: 20px;
           font-size: 0.9em;
           font-weight: bold;
+          color: var(--text-muted);
       }
 
       .selected .vote-counter {
-          background: rgba(255,255,255,0.2);
+          background: var(--success-bg);
       }
 
       .submit-section {
           text-align: center;
           margin-top: 30px;
           padding-top: 30px;
-          border-top: 1px solid #e9ecef;
+          border-top: 1px solid var(--border-color);
       }
 
       .submit-btn {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
+          background: var(--accent-color);
+          color: var(--text-primary);
           border: none;
           padding: 15px 40px;
           font-size: 1.1em;
           border-radius: 25px;
           cursor: pointer;
           transition: all 0.3s ease;
-          box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+          box-shadow: var(--shadow-md);
       }
 
       .submit-btn:hover {
           transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+          box-shadow: var(--shadow-lg);
       }
 
       .submit-btn:disabled {
@@ -147,15 +191,15 @@
       }
 
       .results-section {
-          background: #f8f9fa;
+          background: var(--bg-secondary);
           padding: 30px;
-          border-top: 1px solid #e9ecef;
+          border-top: 1px solid var(--border-color);
       }
 
       .results-title {
           text-align: center;
           margin-bottom: 25px;
-          color: #333;
+          color: var(--text-primary);
       }
 
       .result-item {
@@ -164,19 +208,19 @@
           align-items: center;
           padding: 15px;
           margin-bottom: 10px;
-          background: white;
+          background: var(--bg-card);
           border-radius: 8px;
-          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+          box-shadow: var(--shadow-sm);
       }
 
       .result-name {
           font-weight: bold;
-          color: #333;
+          color: var(--text-primary);
       }
 
       .result-votes {
-          background: #4facfe;
-          color: white;
+          background: var(--accent-secondary);
+          color: var(--text-primary);
           padding: 5px 15px;
           border-radius: 20px;
           font-weight: bold;
@@ -186,12 +230,12 @@
           position: fixed;
           top: 20px;
           right: 20px;
-          background: #4facfe;
-          color: white;
+          background: var(--accent-color);
+          color: var(--text-primary);
           padding: 10px 20px;
           border-radius: 25px;
           font-weight: bold;
-          box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+          box-shadow: var(--shadow-md);
       }
 
       @media (max-width: 768px) {
@@ -219,7 +263,7 @@
       }
   </style>
 </head>
-<body>
+<body data-theme="cyberpunk">
   <div class="container">
       <div class="header">
           <h1>🎤 Voice Recorder Project</h1>
