@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vote for Your Favorite Project Names</title>
+  <style>
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+
+      body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          min-height: 100vh;
+          padding: 20px;
+      }
+
+      .container {
+          max-width: 800px;
+          margin: 0 auto;
+          background: white;
+          border-radius: 15px;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+          overflow: hidden;
+      }
+
+      .header {
+          background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+          color: white;
+          padding: 30px;
+          text-align: center;
+      }
+
+      .header h1 {
+          font-size: 2.5em;
+          margin-bottom: 10px;
+          text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      }
+
+      .header p {
+          font-size: 1.1em;
+          opacity: 0.9;
+      }
+
+      .voting-section {
+          padding: 40px;
+      }
+
+      .instructions {
+          background: #f8f9fa;
+          padding: 20px;
+          border-radius: 10px;
+          margin-bottom: 30px;
+          border-left: 5px solid #4facfe;
+      }
+
+      .instructions h3 {
+          color: #333;
+          margin-bottom: 10px;
+      }
+
+      .name-option {
+          background: #fff;
+          border: 2px solid #e9ecef;
+          border-radius: 10px;
+          padding: 20px;
+          margin-bottom: 15px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          position: relative;
+      }
+
+      .name-option:hover {
+          border-color: #4facfe;
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(79, 172, 254, 0.2);
+      }
+
+      .name-option.selected {
+          border-color: #4facfe;
+          background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+          color: white;
+      }
+
+      .name-option.disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+      }
+
+      .name-title {
+          font-size: 1.4em;
+          font-weight: bold;
+          margin-bottom: 8px;
+      }
+
+      .name-description {
+          font-size: 1em;
+          opacity: 0.8;
+      }
+
+      .vote-counter {
+          position: absolute;
+          top: 15px;
+          right: 20px;
+          background: rgba(0,0,0,0.1);
+          padding: 5px 12px;
+          border-radius: 20px;
+          font-size: 0.9em;
+          font-weight: bold;
+      }
+
+      .selected .vote-counter {
+          background: rgba(255,255,255,0.2);
+      }
+
+      .submit-section {
+          text-align: center;
+          margin-top: 30px;
+          padding-top: 30px;
+          border-top: 1px solid #e9ecef;
+      }
+
+      .submit-btn {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border: none;
+          padding: 15px 40px;
+          font-size: 1.1em;
+          border-radius: 25px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .submit-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      }
+
+      .submit-btn:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          transform: none;
+      }
+
+      .results-section {
+          background: #f8f9fa;
+          padding: 30px;
+          border-top: 1px solid #e9ecef;
+      }
+
+      .results-title {
+          text-align: center;
+          margin-bottom: 25px;
+          color: #333;
+      }
+
+      .result-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 15px;
+          margin-bottom: 10px;
+          background: white;
+          border-radius: 8px;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+
+      .result-name {
+          font-weight: bold;
+          color: #333;
+      }
+
+      .result-votes {
+          background: #4facfe;
+          color: white;
+          padding: 5px 15px;
+          border-radius: 20px;
+          font-weight: bold;
+      }
+
+      .selection-counter {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #4facfe;
+          color: white;
+          padding: 10px 20px;
+          border-radius: 25px;
+          font-weight: bold;
+          box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+      }
+
+      @media (max-width: 768px) {
+          .container {
+              margin: 10px;
+          }
+          
+          .header {
+              padding: 20px;
+          }
+          
+          .header h1 {
+              font-size: 2em;
+          }
+          
+          .voting-section {
+              padding: 20px;
+          }
+          
+          .selection-counter {
+              position: static;
+              margin-bottom: 20px;
+              text-align: center;
+          }
+      }
+  </style>
+</head>
+<body>
+  <div class="container">
+      <div class="header">
+          <h1>🎤 Voice Recorder Project</h1>
+          <p>Help choose the perfect name for this innovative wearable voice assistant!</p>
+      </div>
+
+      <div class="voting-section">
+          <div class="instructions">
+              <h3>📝 Instructions</h3>
+              <p>Select your <strong>2 favorite names</strong> from the list below. Each name represents a unique approach to this clever voice-capturing gadget that summarizes your thoughts hourly.</p>
+          </div>
+
+          <div class="selection-counter">
+              Selected: <span id="selectedCount">0</span>/2
+          </div>
+
+          <div id="nameOptions">
+              <!-- Options will be populated by JavaScript -->
+          </div>
+
+          <div class="submit-section">
+              <button class="submit-btn" id="submitBtn" onclick="submitVote()" disabled>
+                  Submit My Votes
+              </button>
+          </div>
+      </div>
+
+      <div class="results-section">
+          <h2 class="results-title">🏆 Current Results</h2>
+          <div id="results">
+              <!-- Results will be populated by JavaScript -->
+          </div>
+      </div>
+  </div>
+
+  <script>
+      const projectNames = [
+          {
+              name: "BeltButler",
+              description: "I love the personal touch and the reference to wearing it."
+          },
+          {
+              name: "MumbleMiner",
+              description: "Digs through your mumbles to find the gold."
+          },
+          {
+              name: "ThoughtThief",
+              description: "Playfully suggests it 'steals' your thoughts to save them."
+          },
+          {
+              name: "MindLoop",
+              description: "Highlights the continuous, hourly cycle of capturing and summarizing."
+          },
+          {
+              name: "MemoMate",
+              description: "Friendly, approachable, and alliterative."
+          },
+          {
+              name: "Speak & Peek",
+              description: "You speak, it peeks at the important bits."
+          },
+          {
+              name: "Memory Mate",
+              description: "Your memory companion."
+          }
+      ];
+
+      let selectedNames = [];
+      let votes = JSON.parse(localStorage.getItem('projectNameVotes')) || {};
+
+      // Initialize votes for all names
+      projectNames.forEach(name => {
+          if (!votes[name.name]) {
+              votes[name.name] = 0;
+          }
+      });
+
+      function renderOptions() {
+          const container = document.getElementById('nameOptions');
+          container.innerHTML = '';
+
+          projectNames.forEach((project, index) => {
+              const option = document.createElement('div');
+              option.className = 'name-option';
+              option.onclick = () => toggleSelection(project.name, option);
+              
+              option.innerHTML = `
+                  <div class="vote-counter">${votes[project.name]} votes</div>
+                  <div class="name-title">${project.name}</div>
+                  <div class="name-description">${project.description}</div>
+              `;
+              
+              container.appendChild(option);
+          });
+      }
+
+      function toggleSelection(name, element) {
+          if (selectedNames.includes(name)) {
+              // Deselect
+              selectedNames = selectedNames.filter(n => n !== name);
+              element.classList.remove('selected');
+          } else if (selectedNames.length < 2) {
+              // Select
+              selectedNames.push(name);
+              element.classList.add('selected');
+          }
+
+          updateUI();
+      }
+
+      function updateUI() {
+          document.getElementById('selectedCount').textContent = selectedNames.length;
+          document.getElementById('submitBtn').disabled = selectedNames.length !== 2;
+
+          // Update option states
+          const options = document.querySelectorAll('.name-option');
+          options.forEach(option => {
+              if (selectedNames.length === 2 && !option.classList.contains('selected')) {
+                  option.classList.add('disabled');
+              } else {
+                  option.classList.remove('disabled');
+              }
+          });
+      }
+
+      function submitVote() {
+          if (selectedNames.length !== 2) return;
+
+          selectedNames.forEach(name => {
+              votes[name]++;
+          });
+
+          localStorage.setItem('projectNameVotes', JSON.stringify(votes));
+          
+          selectedNames = [];
+          document.querySelectorAll('.name-option').forEach(option => {
+              option.classList.remove('selected', 'disabled');
+          });
+          
+          updateUI();
+          renderOptions();
+          renderResults();
+          
+          alert('Thank you for voting! Your votes have been recorded.');
+      }
+
+      function renderResults() {
+          const container = document.getElementById('results');
+          const sortedResults = Object.entries(votes)
+              .sort(([,a], [,b]) => b - a);
+
+          container.innerHTML = sortedResults.map(([name, count]) => `
+              <div class="result-item">
+                  <span class="result-name">${name}</span>
+                  <span class="result-votes">${count} votes</span>
+              </div>
+          `).join('');
+      }
+
+      // Initialize the page
+      renderOptions();
+      renderResults();
+      updateUI();
+  </script>
+</body>
+</html>
