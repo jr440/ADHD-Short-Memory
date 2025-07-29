@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Mate</title>
+    <style>
+        /* Basic styling for a chat interface */
+        body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 1rem; }
+        #chat-window { border: 1px solid #ccc; height: 400px; overflow-y: scroll; padding: 10px; margin-bottom: 10px; }
+        #question-input { width: 100%; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Ask Your Memory</h1>
+    <div id="chat-window">
+        <p><i>Hourly summaries will appear here...</i></p>
+    </div>
+    <input type="text" id="question-input" placeholder="Ask a question about your day...">
+
+    <script>
+        const chatWindow = document.getElementById('chat-window');
+        const questionInput = document.getElementById('question-input');
+
+        // Function to append messages to the chat window
+        function appendMessage(message, isSummary = false) {
+            const p = document.createElement('p');
+            p.textContent = message;
+            if (isSummary) {
+                p.style.color = "blue";
+                p.style.fontWeight = "bold";
+            }
+            chatWindow.appendChild(p);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        // Listen for user questions and send them to the /ask endpoint
+        questionInput.addEventListener('keypress', async function(e) {
+            if (e.key === 'Enter' && questionInput.value.trim() !== '') {
+                const question = questionInput.value;
+                questionInput.value = '';
+
+                appendMessage(`You: ${question}`);
+
+                try {
+                    const response = await fetch('/ask', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ question })
+                    });
+
+                    const data = await response.json();
+                    appendMessage(`Memory Mate: ${data.answer}`);
+                } catch (error) {
+                    appendMessage('Error: Unable to get a response from the server.');
+                }
+            }
+        });
+
+        // Connect to the Server-Sent Events endpoint for real-time summaries
+        const eventSource = new EventSource('/sse');
+        eventSource.onmessage = function(event) {
+            appendMessage(`Summary: ${event.data}`, true);
+        };
+
+        eventSource.onerror = function() {
+            appendMessage('Error: Unable to connect to the server for real-time updates.');
+        };
+    </script>
+</body>
+</html>
