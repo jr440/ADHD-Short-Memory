@@ -1,434 +1,569 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vote for Your Favorite Project Names</title>
-  <style>
-      [data-theme="cyberpunk"] {
-          --bg-primary: linear-gradient(270deg, #ff00c8, #f7ff00, #6fff00, #00d7ff, #ff00c8);
-          --bg-secondary: rgba(15, 0, 25, 0.9);
-          --bg-tertiary: #1d002c;
-          --bg-card: rgba(15, 0, 25, 0.9);
-          --text-primary: #6fff00;
-          --text-secondary: #ff00f7;
-          --text-muted: #00d7ff;
-          --border-color: rgba(102, 255, 0, 0.6);
-          --accent-color: #ff00c8;
-          --accent-secondary: #f7ff00;
-          --success-bg: rgba(0, 64, 0, 0.9);
-          --success-border: #00ff88;
-          --success-text: #00ff9d;
-          --error-bg: rgba(64, 0, 0, 0.9);
-          --error-border: #ff0055;
-          --error-text: #ff0066;
-          --danger-bg: rgba(64, 0, 0, 0.9);
-          --danger-text: #ff0066;
-          --danger-border: #ff0055;
-          --shadow-sm: 0 0 4px var(--accent-color), 0 0 8px var(--accent-secondary);
-          --shadow-md: 0 0 10px rgba(255, 0, 200, 0.5), 0 0 15px rgba(102, 255, 0, 0.4);
-          --shadow-lg: 0 0 15px rgba(255, 0, 200, 0.6), 0 0 25px rgba(247, 255, 0, 0.4), inset 0 0 10px rgba(102, 255, 0, 0.5);
-          --neon-glow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--accent-color), 0 0 20px var(--accent-color), 0 0 25px var(--accent-color), 0 0 30px var(--accent-color), 0 0 35px var(--accent-color);
-      }
-
-      [data-theme="cyberpunk"] body {
-          background-size: 400% 400%;
-          animation: acid-trip-bg 15s ease infinite;
-      }
-
-      @keyframes acid-trip-bg {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-      }
-
-      * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-      }
-
-      body {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          background: var(--bg-primary);
-          min-height: 100vh;
-          color: var(--text-primary);
-          line-height: 1.6;
-          transition: all 0.3s ease;
-      }
-
-      .container {
-          max-width: 800px;
-          margin: 0 auto;
-          background: var(--bg-card);
-          border-radius: 15px;
-          box-shadow: var(--shadow-md);
-          overflow: hidden;
-      }
-
-      .header {
-          background: var(--bg-secondary);
-          color: var(--text-primary);
-          padding: 30px;
-          text-align: center;
-          box-shadow: var(--shadow-lg);
-      }
-
-      .header h1 {
-          font-size: 2.5em;
-          margin-bottom: 10px;
-          text-shadow: var(--neon-glow);
-      }
-
-      .header p {
-          font-size: 1.1em;
-          opacity: 0.9;
-      }
-
-      .voting-section {
-          padding: 40px;
-      }
-
-      .instructions {
-          background: var(--bg-tertiary);
-          padding: 20px;
-          border-radius: 10px;
-          margin-bottom: 30px;
-          border-left: 5px solid var(--accent-color);
-          box-shadow: var(--shadow-sm);
-      }
-
-      .instructions h3 {
-          color: var(--text-secondary);
-          margin-bottom: 10px;
-      }
-
-      .name-option {
-          background: var(--bg-card);
-          border: 2px solid var(--border-color);
-          border-radius: 10px;
-          padding: 20px;
-          margin-bottom: 15px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          position: relative;
-          box-shadow: var(--shadow-sm);
-      }
-
-      .name-option:hover {
-          border-color: var(--accent-color);
-          transform: translateY(-2px);
-          box-shadow: var(--shadow-md);
-      }
-
-      .name-option.selected {
-          border-color: var(--accent-color);
-          background: var(--accent-color);
-          color: var(--text-secondary);
-          box-shadow: var(--shadow-lg);
-      }
-
-      .name-option.disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-      }
-
-      .name-title {
-          font-size: 1.4em;
-          font-weight: bold;
-          margin-bottom: 8px;
-      }
-
-      .name-description {
-          font-size: 1em;
-          opacity: 0.8;
-      }
-
-      .vote-counter {
-          position: absolute;
-          top: 15px;
-          right: 20px;
-          background: var(--bg-secondary);
-          padding: 5px 12px;
-          border-radius: 20px;
-          font-size: 0.9em;
-          font-weight: bold;
-          color: var(--text-muted);
-      }
-
-      .selected .vote-counter {
-          background: var(--success-bg);
-      }
-
-      .submit-section {
-          text-align: center;
-          margin-top: 30px;
-          padding-top: 30px;
-          border-top: 1px solid var(--border-color);
-      }
-
-      .submit-btn {
-          background: var(--accent-color);
-          color: var(--text-primary);
-          border: none;
-          padding: 15px 40px;
-          font-size: 1.1em;
-          border-radius: 25px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          box-shadow: var(--shadow-md);
-      }
-
-      .submit-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: var(--shadow-lg);
-      }
-
-      .submit-btn:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-          transform: none;
-      }
-
-      .results-section {
-          background: var(--bg-secondary);
-          padding: 30px;
-          border-top: 1px solid var(--border-color);
-      }
-
-      .results-title {
-          text-align: center;
-          margin-bottom: 25px;
-          color: var(--text-primary);
-      }
-
-      .result-item {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 15px;
-          margin-bottom: 10px;
-          background: var(--bg-card);
-          border-radius: 8px;
-          box-shadow: var(--shadow-sm);
-      }
-
-      .result-name {
-          font-weight: bold;
-          color: var(--text-primary);
-      }
-
-      .result-votes {
-          background: var(--accent-secondary);
-          color: var(--text-primary);
-          padding: 5px 15px;
-          border-radius: 20px;
-          font-weight: bold;
-      }
-
-      .selection-counter {
-          position: fixed;
-          top: 20px;
-          right: 20px;
-          background: var(--accent-color);
-          color: var(--text-primary);
-          padding: 10px 20px;
-          border-radius: 25px;
-          font-weight: bold;
-          box-shadow: var(--shadow-md);
-      }
-
-      @media (max-width: 768px) {
-          .container {
-              margin: 10px;
-          }
-          
-          .header {
-              padding: 20px;
-          }
-          
-          .header h1 {
-              font-size: 2em;
-          }
-          
-          .voting-section {
-              padding: 20px;
-          }
-          
-          .selection-counter {
-              position: static;
-              margin-bottom: 20px;
-              text-align: center;
-          }
-      }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blue Blur: An Interactive History of Sonic the Hedgehog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Sonic Speed -->
+    <!-- Application Structure Plan: The SPA is designed as a top-down narrative journey. It begins with a bold hero section to grab attention. The core is an interactive timeline, allowing users to explore distinct eras at their own pace, which is more engaging than a static report. This is supplemented by thematic sections: a 'Character Dossier' to cleanly organize the large cast, a 'Media Multiverse' grid to showcase non-game content, and a 'Franchise Performance' chart to visually summarize the report's core narrative of highs and lows. This structure breaks down the dense text into digestible, interactive modules, prioritizing user exploration and understanding over a rigid, linear format. Gemini features for generating 'What If' eras and new characters are added to enhance creative engagement. -->
+    <!-- Visualization & Content Choices: Report Info: Chronological eras -> Goal: Show historical flow -> Viz: Interactive timeline (HTML/JS) -> Interaction: Click to reveal details -> Justification: User-controlled pacing. Report Info: Key characters -> Goal: Organize cast -> Viz: Character card grid -> Interaction: Click to show bio -> Justification: Centralizes character info. Report Info: Critical reception over time -> Goal: Compare eras -> Viz: Line chart (Chart.js) -> Interaction: Hover for details -> Justification: Instantly shows trends. Report Info: Media -> Goal: Inform on expanded media -> Viz: Grid of cards -> Interaction: Hover -> Justification: Visually separates content. Gemini API: User creativity -> Goal: Engage user -> Viz: Input forms & generated text cards -> Interaction: User input triggers API call -> Justification: Adds a dynamic, personalized layer to the experience. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: #1f2937;
+        }
+        .era-button.active {
+            background-color: #2563EB;
+            color: #FFFFFF;
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .era-content {
+            transition: max-height 0.7s ease-in-out, opacity 0.5s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .era-content.active {
+            max-height: 2000px;
+            opacity: 1;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .character-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 0.75rem;
+            border: 2px solid transparent;
+            background: linear-gradient(45deg, #3b82f6, #f59e0b) border-box;
+            -webkit-mask:
+                linear-gradient(#fff 0 0) padding-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            z-index: -1;
+            transition: all 0.3s ease;
+        }
+        .character-card:hover::before {
+            transform: scale(1.02);
+            opacity: 1;
+        }
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-<body data-theme="cyberpunk">
-  <div class="container">
-      <div class="header">
-          <h1>🎤 Voice Recorder Project</h1>
-          <p>Help choose the perfect name for this innovative wearable voice assistant!
-             is a clever little gadget I'm building. Imagine a tiny, smart voice recorder that you can wear, like on your belt. It's designed specifically to listen to and capture just my voice throughout the day – whether I'm speaking my thoughts aloud, making a mental note, or brainstorming ideas. Then, the really cool part is, at the end of each hour, it automatically goes through everything I've said and gives me a super quick, easy-to-read summary of the main points. So, instead of having to listen back to my own long recordings, I just get the highlights. It's like having a little personal assistant that remembers everything important I've told it!"
-          </p>
-      </div>
+<body class="antialiased">
 
-      <div class="voting-section">
-          <div class="instructions">
-              <h3>📝 Instructions</h3>
-              <p>Select your <strong>2 favorite names</strong> from the list below. Each name represents a unique approach to this clever voice-capturing gadget that summarizes your thoughts hourly.</p>
-          </div>
+    <main>
+        <section id="hero" class="h-screen w-full flex flex-col justify-center items-center text-center bg-gray-900 text-white p-4 relative overflow-hidden">
+            <div class="absolute inset-0 bg-blue-600/20" id="blur-effect"></div>
+            <div class="relative z-10">
+                <h1 class="text-5xl md:text-8xl font-black uppercase tracking-tighter">Blue Blur</h1>
+                <p class="mt-4 text-xl md:text-3xl font-semibold text-gray-300">An Interactive History of Sonic the Hedgehog</p>
+                <a href="#timeline" class="mt-12 inline-block bg-yellow-400 text-gray-900 font-bold py-3 px-8 rounded-full text-lg uppercase transition-transform hover:scale-105">
+                    Start the Journey
+                </a>
+            </div>
+        </section>
 
-          <div class="selection-counter">
-              Selected: <span id="selectedCount">0</span>/2
-          </div>
+        <section id="timeline" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-5xl font-bold text-gray-800">The Eras of Sonic</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">From a 16-bit icon to a modern multimedia superstar, Sonic's journey is one of highs, lows, and constant reinvention. Click on an era below to explore its defining games, key events, and lasting impact on the franchise.</p>
+                </div>
+                <div id="era-buttons" class="flex flex-wrap justify-center gap-3 md:gap-4 mb-12"></div>
+                <div id="era-details-container" class="mt-8"></div>
+                
+                <div id="gemini-era-generator" class="mt-16 pt-12 border-t border-gray-200">
+                    <div class="text-center mb-8 max-w-3xl mx-auto">
+                        <h3 class="text-3xl font-bold text-gray-800">✨ Generate a "What If?" Era</h3>
+                        <p class="mt-3 text-gray-600">Ever wonder what would have happened if Sonic's history took a different turn? Enter a scenario below and let AI imagine a new era for the Blue Blur!</p>
+                    </div>
+                    <div class="max-w-xl mx-auto">
+                        <div class="flex gap-2">
+                            <input type="text" id="what-if-prompt" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., What if Sonic X-treme was released?">
+                            <button id="generate-era-btn" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors">Generate</button>
+                        </div>
+                        <div id="era-generator-output" class="mt-6"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-          <div id="nameOptions">
-              <!-- Options will be populated by JavaScript -->
-          </div>
+        <section id="performance" class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-5xl font-bold text-gray-800">Franchise Performance</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">This chart visualizes the critical reception and fan sentiment of Sonic's mainline games over time, reflecting the narrative of the report. It highlights the peaks of the Classic era, the struggles of the "Dark Age," and the triumphant Modern Renaissance.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+        </section>
 
-          <div class="submit-section">
-              <button class="submit-btn" id="submitBtn" onclick="submitVote()" disabled>
-                  Submit My Votes
-              </button>
-          </div>
-      </div>
+        <section id="characters" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-5xl font-bold text-gray-800">Character Dossier</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Sonic's universe is filled with a vibrant cast of friends and foes. Click on a character to learn more about their personality, abilities, and their debut in the series, or create your own!</p>
+                </div>
+                <div id="character-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-6 md:gap-8"></div>
+            </div>
+        </section>
 
-      <div class="results-section">
-          <h2 class="results-title">🏆 Current Results</h2>
-          <div id="results">
-              <!-- Results will be populated by JavaScript -->
-          </div>
-      </div>
-  </div>
+        <section id="multiverse" class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-5xl font-bold text-gray-800">The Media Multiverse</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Beyond the games, Sonic has conquered television, comics, and film, expanding his universe and introducing his adventures to new generations of fans across the globe.</p>
+                </div>
+                <div id="media-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            </div>
+        </section>
+        
+        <section id="legacy" class="py-16 md:py-24 bg-gray-800 text-white">
+            <div class="container mx-auto px-4 text-center">
+                 <h2 class="text-4xl md:text-5xl font-bold">The Enduring Speed of an Icon</h2>
+                 <p class="mt-6 text-lg text-gray-300 max-w-4xl mx-auto">Sonic the Hedgehog's journey is a three-decade saga of rivalry, resilience, and reinvention. Born as a strategic weapon in a console war, he evolved into a cultural icon embodying speed and attitude. He survived industry shifts, creative missteps, and the fall of his parent company as a console maker. Today, Sonic thrives, propelled by a unique synergy with his passionate fanbase, a successful cinematic universe, and a bold new direction for his games. His legacy isn't just about running fast; it's about the remarkable endurance to keep running, adapting, and inspiring across a landscape of constant change.</p>
+            </div>
+        </section>
+    </main>
 
-  <script>
-      const projectNames = [
-          {
-              name: "BeltButler",
-              description: "I love the personal touch and the reference to wearing it."
-          },
-          {
-              name: "MumbleMiner",
-              description: "Digs through your mumbles to find the gold."
-          },
-          {
-              name: "ThoughtThief",
-              description: "Playfully suggests it 'steals' your thoughts to save them."
-          },
-          {
-              name: "MindLoop",
-              description: "Highlights the continuous, hourly cycle of capturing and summarizing."
-          },
-          {
-              name: "MemoMate",
-              description: "Friendly, approachable, and alliterative."
-          },
-          {
-              name: "Speak & Peek",
-              description: "You speak, it peeks at the important bits."
-          },
-          {
-              name: "Memory Mate",
-              description: "Your memory companion."
-          }
-      ];
+    <div id="character-modal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center p-4 z-50 hidden modal-overlay opacity-0">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-lg p-6 md:p-8 relative transform scale-95 modal-content">
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+    
+    <footer class="bg-gray-900 text-white py-6">
+        <div class="container mx-auto px-4 text-center text-gray-400">
+            <p>Interactive experience designed from the "Blue Blur" historical report. All content derived from source material.</p>
+        </div>
+    </footer>
 
-      let selectedNames = [];
-      let votes = JSON.parse(localStorage.getItem('projectNameVotes')) || {};
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const data = {
+                eras: [
+                    { id: 'classic', name: 'Classic Era', years: '1991–1995', summary: "The birth of an icon. This era defined Sonic with 2D momentum-based platforming, a simple good vs. evil narrative, and established him as a 90s pop culture phenomenon, successfully challenging Nintendo's market dominance.", keyEvents: [
+                        { title: 'Sonic the Hedgehog (1991)', desc: "The game that started it all, showcasing the Genesis' 'Blast Processing' and introducing Sonic's signature speed." },
+                        { title: 'Miles "Tails" Prower', desc: "Introduced in *Sonic 2* (1992) as a clever co-op partner for a second player." },
+                        { title: 'Knuckles the Echidna', desc: "Debuted in *Sonic 3* (1994) as a rival-turned-ally and guardian of the Master Emerald." },
+                        { title: 'Sonic CD (1993)', desc: "Introduced Amy Rose and the menacing Metal Sonic, expanding the cast and lore." }
+                    ]},
+                    { id: 'saturn', name: 'Saturn Stumble', years: '1996–1998', summary: "A difficult transitional period for the franchise. The lack of a true mainline 3D Sonic game on the Sega Saturn, following the cancellation of *Sonic X-treme*, caused the series to lose significant momentum and cultural relevance.", keyEvents: [
+                        { title: 'Cancellation of Sonic X-treme', desc: "The ambitious 3D flagship title was cancelled in 1997 after a troubled development, a major blow to the Saturn." },
+                        { title: 'Spin-offs Only', desc: "The only Sonic titles on the console were spin-offs like the isometric *Sonic 3D Blast* and racing game *Sonic R*." },
+                        { title: '"Retro" Status', desc: "Without a major new release, Sonic began to be seen as a character of a bygone era, losing ground to new 3D mascots." }
+                    ]},
+                    { id: 'dreamcast', name: 'Dreamcast Era', years: '1998–2004', summary: "Sonic's triumphant reinvention in 3D. This era introduced complex, cinematic storytelling, multiple gameplay styles, and a redesigned 'Modern' look for the cast. It ended with Sega's exit from the console hardware market.", keyEvents: [
+                        { title: 'Sonic Adventure (1998)', desc: "A massive 3D adventure that reinvented the series with voice acting, multiple characters, and explorable hub worlds." },
+                        { title: 'Shadow the Hedgehog', desc: "Introduced in *Sonic Adventure 2* (2001) as a dark anti-hero and 'Ultimate Lifeform', becoming an instant fan favorite." },
+                        { title: 'Sega Goes Third-Party', desc: "In 2001, Sega discontinued the Dreamcast, and Sonic games began appearing on former rival consoles like the Nintendo GameCube." },
+                        { title: 'Sonic Heroes (2003)', desc: "The first multi-platform mainline game, featuring a team-based mechanic but receiving mixed reviews for its controls and camera." }
+                    ]},
+                    { id: 'darkage', name: '"Dark Age"', years: '2005–2009', summary: "A period of critical lows and a severe identity crisis. The franchise experimented with 'mature' themes, convoluted plots, and divisive gameplay mechanics, which significantly damaged the brand's reputation among critics and fans.", keyEvents: [
+                        { title: 'Shadow the Hedgehog (2005)', desc: "A spin-off featuring firearms and a darker tone that was critically panned for being jarring and inauthentic." },
+                        { title: 'Sonic the Hedgehog (2006)', desc: "A disastrous 15th-anniversary reboot plagued by glitches, long load times, and a widely ridiculed story. It is considered the franchise's nadir." },
+                        { title: 'The "Werehog"', desc: "*Sonic Unleashed* (2008) featured brilliant high-speed daytime stages but was dragged down by slow, clunky nighttime combat sections." }
+                    ]},
+                    { id: 'refocus', name: 'Refocusing Era', years: '2010–2016', summary: "A deliberate and successful course correction. This era saw a return to form by focusing on refined speed-based 'Boost' gameplay, lighthearted stories, and celebrating the franchise's rich history.", keyEvents: [
+                        { title: 'Sonic Colors (2010)', desc: "Hailed as a return to form, it focused purely on speed, introduced the Wisp power-ups, and adopted a fun, comedic tone." },
+                        { title: 'Sonic Generations (2011)', desc: "A 20th-anniversary celebration that brilliantly united 'Classic' 2D gameplay with 'Modern' 3D gameplay." },
+                        { title: 'Handheld Success', desc: "Throughout the 'Dark Age' and this era, well-received 2D games on handhelds like the *Sonic Advance* and *Rush* series kept the classic formula alive." }
+                    ]},
+                    { id: 'renaissance', name: 'Modern Renaissance', years: '2017–Present', summary: "A period of unprecedented revitalization. Marked by successful collaboration with fan creators, bold new gameplay directions, and massive mainstream success with a blockbuster live-action film series.", keyEvents: [
+                        { title: 'Sonic Mania (2017)', desc: "A critically acclaimed 2D game developed by fan creators that became the highest-rated Sonic title in 15 years." },
+                        { title: 'Live-Action Films (2020-Present)', desc: "After a fan-demanded redesign, the movie series became a massive box office success, catapulting Sonic back into the mainstream." },
+                        { title: 'Sonic Frontiers (2022)', desc: "Introduced the ambitious 'Open Zone' gameplay, successfully evolving the 3D formula and receiving widespread praise." }
+                    ]}
+                ],
+                performanceData: {
+                    labels: ['Classic', 'Saturn', 'Dreamcast', '"Dark Age"', 'Refocusing', 'Renaissance'],
+                    values: [90, 40, 75, 30, 80, 95]
+                },
+                characters: [
+                    { name: 'Sonic', color: 'bg-blue-500', icon: '💨', bio: "The world's fastest hedgehog. Cocky, free-spirited, and always ready for an adventure. He lives to run and fights to protect the innocent from Dr. Eggman.", debut: 'Rad Mobile (cameo, 1991) / Sonic the Hedgehog (1991)' },
+                    { name: 'Tails', color: 'bg-yellow-500', icon: '🔧', bio: "A young, brilliant fox with two tails that allow him to fly. Sonic's best friend and loyal sidekick, he is a genius inventor who provides crucial technical support.", debut: 'Sonic the Hedgehog 2 (1992)' },
+                    { name: 'Knuckles', color: 'bg-red-600', icon: '💎', bio: "A powerful echidna and the solemn guardian of the Master Emerald. Initially a rival, he is now one of Sonic's strongest allies. He is strong, stubborn, and sometimes gullible.", debut: 'Sonic the Hedgehog 3 (1994)' },
+                    { name: 'Amy Rose', color: 'bg-pink-500', icon: '💖', bio: "A cheerful and determined pink hedgehog who is Sonic's self-proclaimed girlfriend. She wields the powerful Piko Piko Hammer and is the heart of the team.", debut: 'Sonic the Hedgehog CD (1993)' },
+                    { name: 'Dr. Eggman', color: 'bg-gray-700', icon: '🤖', bio: "A roboticist with an IQ of 300 and Sonic's arch-nemesis. He constantly schemes to take over the world by turning innocent animals into his robotic Badnik army.", debut: 'Sonic the Hedgehog (1991)' },
+                    { name: 'Shadow', color: 'bg-black', icon: '🔥', bio: "The 'Ultimate Lifeform' and Sonic's arch-rival. A dark and brooding anti-hero with a tragic past, he possesses powers of Chaos Control, allowing him to manipulate time and space.", debut: 'Sonic Adventure 2 (2001)' }
+                ],
+                media: [
+                    { title: 'Adventures of Sonic the Hedgehog', years: '1993', type: 'TV Series', desc: 'A syndicated weekday cartoon known for its slapstick humor and "Sonic Says" PSAs.' },
+                    { title: 'Sonic the Hedgehog (SatAM)', years: '1993-1994', type: 'TV Series', desc: 'A darker, more dramatic Saturday morning cartoon depicting Sonic as a freedom fighter in a conquered world.' },
+                    { title: 'Sonic X', years: '2003-2006', type: 'Anime Series', desc: 'A Japanese anime that adapted the Sonic Adventure games before launching into an original space opera arc.' },
+                    { title: 'Archie Comics', years: '1993-2016', type: 'Comic Series', desc: 'The longest-running video game comic, it created its own sprawling continuity based on the SatAM cartoon.' },
+                    { title: 'IDW Comics', years: '2018-Present', type: 'Comic Series', desc: 'The current comic series, set in the official game continuity and taking place after the events of Sonic Forces.' },
+                    { title: 'Sonic the Hedgehog Films', years: '2020-Present', type: 'Film Series', desc: 'A massively successful live-action film franchise from Paramount Pictures that has grossed over $1 billion worldwide.' }
+                ]
+            };
 
-      // Initialize votes for all names
-      projectNames.forEach(name => {
-          if (!votes[name.name]) {
-              votes[name.name] = 0;
-          }
-      });
+            const eraButtonsContainer = document.getElementById('era-buttons');
+            const eraDetailsContainer = document.getElementById('era-details-container');
 
-      function renderOptions() {
-          const container = document.getElementById('nameOptions');
-          container.innerHTML = '';
+            data.eras.forEach(era => {
+                const button = document.createElement('button');
+                button.className = 'era-button text-sm md:text-base font-semibold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out bg-white hover:bg-blue-500 hover:text-white hover:scale-105';
+                button.textContent = era.name;
+                button.dataset.eraId = era.id;
+                eraButtonsContainer.appendChild(button);
 
-          projectNames.forEach((project, index) => {
-              const option = document.createElement('div');
-              option.className = 'name-option';
-              option.onclick = () => toggleSelection(project.name, option);
-              
-              option.innerHTML = `
-                  <div class="vote-counter">${votes[project.name]} votes</div>
-                  <div class="name-title">${project.name}</div>
-                  <div class="name-description">${project.description}</div>
-              `;
-              
-              container.appendChild(option);
-          });
-      }
+                const detailDiv = document.createElement('div');
+                detailDiv.id = `era-content-${era.id}`;
+                detailDiv.className = 'era-content';
+                let eventsHtml = era.keyEvents.map(event => `
+                    <div class="bg-white rounded-lg p-6 shadow-md">
+                        <h4 class="font-bold text-lg text-blue-600">${event.title}</h4>
+                        <p class="mt-2 text-gray-600">${event.desc}</p>
+                    </div>
+                `).join('');
+                detailDiv.innerHTML = `
+                    <div class="bg-gray-100 p-6 md:p-8 rounded-xl shadow-inner">
+                        <div class="max-w-4xl mx-auto">
+                            <h3 class="text-2xl md:text-3xl font-bold text-gray-800">${era.name} <span class="text-gray-500 font-medium">(${era.years})</span></h3>
+                            <p class="mt-4 text-lg text-gray-700">${era.summary}</p>
+                            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                ${eventsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                eraDetailsContainer.appendChild(detailDiv);
+            });
 
-      function toggleSelection(name, element) {
-          if (selectedNames.includes(name)) {
-              // Deselect
-              selectedNames = selectedNames.filter(n => n !== name);
-              element.classList.remove('selected');
-          } else if (selectedNames.length < 2) {
-              // Select
-              selectedNames.push(name);
-              element.classList.add('selected');
-          }
+            eraButtonsContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('era-button')) {
+                    const eraId = e.target.dataset.eraId;
+                    
+                    document.querySelectorAll('.era-button').forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
 
-          updateUI();
-      }
+                    document.querySelectorAll('.era-content').forEach(content => {
+                        if (content.id === `era-content-${eraId}`) {
+                            content.classList.add('active');
+                        } else {
+                            content.classList.remove('active');
+                        }
+                    });
+                }
+            });
+            
+            if (eraButtonsContainer.firstChild) {
+                eraButtonsContainer.firstChild.click();
+            }
 
-      function updateUI() {
-          document.getElementById('selectedCount').textContent = selectedNames.length;
-          document.getElementById('submitBtn').disabled = selectedNames.length !== 2;
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.6)');
+            gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
 
-          // Update option states
-          const options = document.querySelectorAll('.name-option');
-          options.forEach(option => {
-              if (selectedNames.length === 2 && !option.classList.contains('selected')) {
-                  option.classList.add('disabled');
-              } else {
-                  option.classList.remove('disabled');
-              }
-          });
-      }
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.performanceData.labels,
+                    datasets: [{
+                        label: 'Franchise Critical & Fan Sentiment',
+                        data: data.performanceData.values,
+                        borderColor: '#2563EB',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#FFFFFF',
+                        pointBorderColor: '#2563EB',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, max: 100, ticks: { callback: (v) => v + '%', font: { weight: '600' } }, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { ticks: { font: { weight: '600' } }, grid: { display: false } } },
+                    plugins: { legend: { display: false }, tooltip: { enabled: true, backgroundColor: '#1f2937', titleFont: { weight: 'bold' }, bodyFont: { size: 14 }, padding: 12, cornerRadius: 8, callbacks: { label: (c) => `Sentiment: ${c.parsed.y}%` } } }
+                }
+            });
 
-      function submitVote() {
-          if (selectedNames.length !== 2) return;
+            const characterGrid = document.getElementById('character-grid');
+            const modal = document.getElementById('character-modal');
+            const modalBody = document.getElementById('modal-body');
+            const closeModalBtn = document.getElementById('close-modal');
 
-          selectedNames.forEach(name => {
-              votes[name]++;
-          });
+            data.characters.forEach(char => {
+                const card = document.createElement('div');
+                card.className = 'character-card relative bg-white p-4 rounded-xl shadow-lg text-center cursor-pointer transition-transform hover:-translate-y-2';
+                card.dataset.charName = char.name;
+                card.innerHTML = `
+                    <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center text-4xl ${char.color}">
+                        ${char.icon}
+                    </div>
+                    <h3 class="mt-4 font-bold text-lg text-gray-800">${char.name}</h3>
+                `;
+                characterGrid.appendChild(card);
+            });
 
-          localStorage.setItem('projectNameVotes', JSON.stringify(votes));
-          
-          selectedNames = [];
-          document.querySelectorAll('.name-option').forEach(option => {
-              option.classList.remove('selected', 'disabled');
-          });
-          
-          updateUI();
-          renderOptions();
-          renderResults();
-          
-          alert('Thank you for voting! Your votes have been recorded.');
-      }
+            const createCharCard = document.createElement('div');
+            createCharCard.id = 'create-char-btn';
+            createCharCard.className = 'character-card relative bg-gray-100 border-2 border-dashed border-gray-300 p-4 rounded-xl shadow-lg text-center cursor-pointer transition-transform hover:-translate-y-2 flex flex-col justify-center items-center hover:border-blue-500 hover:bg-blue-50';
+            createCharCard.innerHTML = `
+                <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center text-4xl bg-gray-200 text-gray-500">
+                    ✨
+                </div>
+                <h3 class="mt-4 font-bold text-lg text-gray-600">Create a Character</h3>
+            `;
+            characterGrid.appendChild(createCharCard);
 
-      function renderResults() {
-          const container = document.getElementById('results');
-          const sortedResults = Object.entries(votes)
-              .sort(([,a], [,b]) => b - a);
+            characterGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.character-card');
+                if (!card) return;
 
-          container.innerHTML = sortedResults.map(([name, count]) => `
-              <div class="result-item">
-                  <span class="result-name">${name}</span>
-                  <span class="result-votes">${count} votes</span>
-              </div>
-          `).join('');
-      }
+                if (card.id === 'create-char-btn') {
+                    openCharacterGenerator();
+                } else {
+                    const charName = card.dataset.charName;
+                    const charData = data.characters.find(c => c.name === charName);
+                    if (charData) {
+                        displayCharacterData(charData);
+                    }
+                }
+            });
+            
+            const openModal = () => {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                   modal.classList.remove('opacity-0');
+                   modal.querySelector('.modal-content').classList.remove('scale-95');
+                }, 10);
+            };
 
-      // Initialize the page
-      renderOptions();
-      renderResults();
-      updateUI();
-  </script>
+            const closeModal = () => {
+                modal.classList.add('opacity-0');
+                modal.querySelector('.modal-content').classList.add('scale-95');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            };
+            
+            const displayCharacterData = (charData) => {
+                modalBody.innerHTML = `
+                    <div class="flex flex-col md:flex-row items-center gap-6">
+                        <div class="w-24 h-24 md:w-32 md:h-32 rounded-full flex-shrink-0 flex items-center justify-center text-6xl ${charData.color || 'bg-gray-400'}">
+                            ${charData.icon || '❓'}
+                        </div>
+                        <div>
+                            <h3 class="text-3xl font-bold text-gray-900">${charData.name}</h3>
+                            <p class="mt-4 text-gray-600">${charData.bio}</p>
+                            ${charData.abilities ? `<div class="mt-4">
+                                <h4 class="font-semibold text-gray-800">Abilities:</h4>
+                                <ul class="list-disc list-inside text-gray-600">${charData.abilities.map(a => `<li>${a}</li>`).join('')}</ul>
+                            </div>` : ''}
+                            <p class="mt-4 text-sm font-semibold text-blue-600">First Appearance: <span class="font-medium text-gray-700">${charData.debut}</span></p>
+                        </div>
+                    </div>
+                `;
+                openModal();
+            };
+
+            const openCharacterGenerator = () => {
+                modalBody.innerHTML = `
+                    <h3 class="text-2xl font-bold text-gray-900 text-center">✨ Create a New Character</h3>
+                    <p class="text-center text-gray-600 mt-2">Describe your character with a few keywords.</p>
+                    <div class="mt-6">
+                        <input type="text" id="char-keywords" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., shy, electric, mechanic">
+                        <button id="generate-char-submit" class="w-full mt-4 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">Generate Character</button>
+                    </div>
+                    <div id="char-generator-modal-output" class="mt-6"></div>
+                `;
+                openModal();
+                document.getElementById('generate-char-submit').addEventListener('click', handleCharacterGeneration);
+            };
+
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            const mediaGrid = document.getElementById('media-grid');
+            data.media.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-xl shadow-lg p-6 flex flex-col transition-shadow hover:shadow-xl';
+                card.innerHTML = `
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-start">
+                             <h3 class="text-xl font-bold text-gray-800">${item.title}</h3>
+                             <span class="text-sm font-semibold text-white ${item.type === 'Film Series' ? 'bg-red-500' : 'bg-blue-500'} py-1 px-3 rounded-full">${item.type}</span>
+                        </div>
+                        <p class="text-gray-500 font-medium mt-1">${item.years}</p>
+                        <p class="mt-4 text-gray-600">${item.desc}</p>
+                    </div>
+                `;
+                mediaGrid.appendChild(card);
+            });
+
+            const blurEffect = document.getElementById('blur-effect');
+            let x = 0, y = 0, targetX = 0, targetY = 0;
+            const speed = 0.05;
+
+            function animateBlur() {
+                targetX = (Math.random() - 0.5) * 200;
+                targetY = (Math.random() - 0.5) * 200;
+                requestAnimationFrame(updatePosition);
+            }
+
+            function updatePosition() {
+                x += (targetX - x) * speed;
+                y += (targetY - y) * speed;
+                blurEffect.style.transform = `translate(${x}px, ${y}px) scale(3)`;
+                if (Math.abs(targetX - x) < 1 && Math.abs(targetY - y) < 1) { setTimeout(animateBlur, 1000); } 
+                else { requestAnimationFrame(updatePosition); }
+            }
+            animateBlur();
+
+            const generateEraBtn = document.getElementById('generate-era-btn');
+            const eraGeneratorOutput = document.getElementById('era-generator-output');
+            const whatIfPromptInput = document.getElementById('what-if-prompt');
+
+            generateEraBtn.addEventListener('click', async () => {
+                const userPrompt = whatIfPromptInput.value;
+                if (!userPrompt.trim()) {
+                    eraGeneratorOutput.innerHTML = `<p class="text-red-500 text-center">Please enter a scenario.</p>`;
+                    return;
+                }
+                
+                eraGeneratorOutput.innerHTML = `<div class="flex justify-center items-center p-4"><div class="loader"></div></div>`;
+
+                const fullPrompt = `Based on the entire history of Sonic the Hedgehog, write a short, imaginative summary for a fictional 'what if' era based on this scenario: "${userPrompt}". Describe the key games of this fictional era, the general fan and critical reception, and how it changed Sonic's long-term trajectory. Keep the tone consistent with a historical analysis of the Sonic franchise.`;
+
+                try {
+                    const generatedText = await callGemini(fullPrompt);
+                    eraGeneratorOutput.innerHTML = `
+                        <div class="bg-gray-100 p-6 rounded-lg shadow-inner">
+                            <h4 class="text-xl font-bold text-blue-700">What If: ${userPrompt}</h4>
+                            <p class="mt-4 text-gray-700 whitespace-pre-wrap">${generatedText}</p>
+                        </div>
+                    `;
+                } catch (error) {
+                    eraGeneratorOutput.innerHTML = `<p class="text-red-500 text-center">Failed to generate era. Please try again later.</p>`;
+                }
+            });
+
+            async function handleCharacterGeneration() {
+                const keywords = document.getElementById('char-keywords').value;
+                const outputDiv = document.getElementById('char-generator-modal-output');
+                if (!keywords.trim()) {
+                    outputDiv.innerHTML = `<p class="text-red-500 text-center">Please enter some keywords.</p>`;
+                    return;
+                }
+                
+                outputDiv.innerHTML = `<div class="flex justify-center items-center p-4"><div class="loader"></div></div>`;
+
+                const prompt = `Generate a new character concept for the Sonic the Hedgehog universe based on these keywords: "${keywords}". Provide a name, a short bio, a list of their main abilities, and a concept for their debut game.`;
+                const schema = {
+                    type: "OBJECT",
+                    properties: {
+                        name: { type: "STRING" },
+                        bio: { type: "STRING" },
+                        abilities: { type: "ARRAY", items: { type: "STRING" } },
+                        debut: { type: "STRING", description: "The name of the fictional game where the character first appears." }
+                    },
+                    required: ["name", "bio", "abilities", "debut"]
+                };
+
+                try {
+                    const jsonString = await callGemini(prompt, schema);
+                    const charData = JSON.parse(jsonString);
+                    displayCharacterData(charData);
+                } catch (error) {
+                    outputDiv.innerHTML = `<p class="text-red-500 text-center">Failed to generate character. The model may have produced an invalid response. Please try again with different keywords.</p>`;
+                }
+            }
+
+            async function callGemini(prompt, schema = null, retries = 3, delay = 1000) {
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                
+                const payload = {
+                    contents: [{ role: "user", parts: [{ text: prompt }] }]
+                };
+
+                if (schema) {
+                    payload.generationConfig = {
+                        responseMimeType: "application/json",
+                        responseSchema: schema
+                    };
+                }
+
+                for (let i = 0; i < retries; i++) {
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`API request failed with status ${response.status}`);
+                        }
+
+                        const result = await response.json();
+                        
+                        if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts.length > 0) {
+                            return result.candidates[0].content.parts[0].text;
+                        } else {
+                            throw new Error("Invalid response structure from API.");
+                        }
+                    } catch (error) {
+                        if (i === retries - 1) throw error;
+                        await new Promise(res => setTimeout(res, delay * Math.pow(2, i)));
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
